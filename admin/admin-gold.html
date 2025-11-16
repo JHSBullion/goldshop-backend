@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <title>KEDAI EMAS SIANG HENG - 金价后台</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+    .card {
+      background: rgba(15,23,42,0.95);
+      border-radius: 16px;
+      padding: 20px 24px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+      border: 1px solid rgba(148,163,184,0.2);
+      backdrop-filter: blur(12px);
+    }
+    h1 {
+      font-size: 24px;
+      margin: 0 0 8px;
+    }
+    h2 {
+      font-size: 18px;
+      margin: 16px 0 8px;
+    }
+    .subtitle {
+      color: #9ca3af;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .flex {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .input {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .input:focus {
+      outline: none;
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 1px rgba(251,191,36,0.4);
+    }
+    label {
+      font-size: 13px;
+      color: #d1d5db;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg,#f59e0b,#fbbf24);
+      color: #111827;
+      font-weight: 600;
+    }
+    .btn-outline {
+      background: transparent;
+      color: #e5e7eb;
+      border: 1px solid #4b5563;
+    }
+    .btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(15,118,110,0.2);
+      color: #6ee7b7;
+      border: 1px solid rgba(45,212,191,0.5);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(55,65,81,0.8);
+      text-align: left;
+      white-space: nowrap;
+    }
+    th {
+      color: #9ca3af;
+      font-weight: 500;
+    }
+    .status {
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    .status-success {
+      color: #6ee7b7;
+    }
+    .status-error {
+      color: #fca5a5;
+    }
+    .pill-input-row {
+      display: grid;
+      grid-template-columns: 60px 1fr 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .pill {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid #4b5563;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pill span {
+      color: #e5e7eb;
+    }
+    .pill small {
+      color: #9ca3af;
+      font-size: 11px;
+    }
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+    .footer {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 16px;
+      text-align: right;
+    }
+    .danger {
+      color: #f97373;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .small {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    /* 简单的“假登录”遮罩，阻止普通人乱进 */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+    .login-card {
+      width: 320px;
+      padding: 20px 24px 18px;
+      border-radius: 16px;
+      background: rgba(15,23,42,0.98);
+      border: 1px solid rgba(148,163,184,0.3);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+    }
+    .login-card h2 {
+      margin-top: 0;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+    .login-card p {
+      margin: 0 0 12px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-card">
+    <h2>员工后台登录</h2>
+    <p>此页面仅用于内部设定金价，请输入后台密码。</p>
+    <label>
+      <span>密码</span>
+      <input id="loginPassword" type="password" class="input" placeholder="请输入内部密码">
+    </label>
+    <div class="flex-between" style="margin-top: 12px;">
+      <span class="small">建议只让店长／负责人知道此密码。</span>
+      <button class="btn btn-primary" id="loginBtn">进入</button>
+    </div>
+    <div id="loginStatus" class="danger"></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <div class="flex-between">
+      <div>
+        <h1>KEDAI EMAS SIANG HENG</h1>
+        <div class="subtitle">今日金价后台设定 · 直接连线线上系统（Render + Railway）</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="tag">
+          <div class="badge-dot"></div>
+          <span>API Connected</span>
+        </div>
+        <div class="small" style="margin-top:4px;">
+          API: <span id="apiBaseText"></span>
+        </div>
+      </div>
+    </div>
+
+    <h2>设定 / 更新今日金价</h2>
+    <div class="small" style="margin-bottom:6px;">
+      ➜ 填写每种金的「卖价 / 买价」。保存后，顾客前台将显示最新价格。
+    </div>
+
+    <div id="priceForm">
+      <div class="pill-input-row">
+        <div class="pill">
+          <span>999</span>
+          <small>纯金</small>
+        </div>
+        <div>
+          <label>卖价（顾客买金价） / 每克
+            <input type="number" step="0.01" id="sell_999" class="input" placeholder="例如 330">
+          </label>
+        </div>
+        <div>
+          <label>买价（店收金价） / 每克
+            <input type="number" step="0.01" id="buy_999" class="input" placeholder="例如 310">
+          </label>
+        </div>
+      </div>
+
+      <div class="pill-input-row">
+        <div class="pill">
+          <span>916</span>
+          <small>22K</small>
+        </div>
+        <div>
+          <label>卖价 / 每克
+            <input type="number" step="0.01" id="sell_916" class="input" placeholder="例如 300">
+          </label>
+        </div>
+        <div>
+          <label>买价 / 每克
+            <input type="number" step="0.01" id="buy_916" class="input" placeholder="例如 280">
+          </label>
+        </div>
+      </div>
+
+      <div class="pill-input-row">
+        <div class="pill">
+          <span>750</span>
+          <small>18K</small>
+        </div>
+        <div>
+          <label>卖价 / 每克
+            <input type="number" step="0.01" id="sell_750" class="input" placeholder="例如 240">
+          </label>
+        </div>
+        <div>
+          <label>买价 / 每克
+            <input type="number" step="0.01" id="buy_750" class="input" placeholder="例如 220">
+          </label>
+        </div>
+      </div>
+
+      <div class="flex-between" style="margin-top:8px;">
+        <button id="loadBtn" class="btn btn-outline" type="button">↻ 读取目前最新价格</button>
+        <button id="saveBtn" class="btn btn-primary" type="button">💾 保存今日金价</button>
+      </div>
+      <div id="status" class="status"></div>
+    </div>
+
+    <h2 style="margin-top:18px;">目前系统中的最新价格</h2>
+    <div class="small">每个 K 只显示最新一条记录，用于前台展示。</div>
+    <table>
+      <thead>
+      <tr>
+        <th>Karat</th>
+        <th>卖价 / g</th>
+        <th>买价 / g</th>
+        <th>来源</th>
+        <th>更新时间</th>
+      </tr>
+      </thead>
+      <tbody id="latestTableBody">
+      <tr><td colspan="5" style="text-align:center;color:#6b7280;">尚无资料</td></tr>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      内部工具 · 请勿公开此网址给顾客 · Powered by kedai-emas-siang-heng API
+    </div>
+  </div>
+</div>
+
+<script>
+  // ======= 配置：你的后端 API 地址 =======
+  const API_BASE = "https://kedai-emas-siang-heng.onrender.com";
+
+  // 简单“假登录”密码（只挡普通人，真正安全要做后端认证）
+  const SIMPLE_ADMIN_PASSWORD = "emas2025";
+
+  const $ = (id) => document.getElementById(id);
+  $("apiBaseText").textContent = API_BASE;
+
+  // 登录逻辑（前端只做简单遮挡）
+  $("loginBtn").addEventListener("click", () => {
+    const input = $("loginPassword").value.trim();
+    if (!input) {
+      $("loginStatus").textContent = "请输入密码。";
+      return;
+    }
+    if (input === SIMPLE_ADMIN_PASSWORD) {
+      $("loginOverlay").style.display = "none";
+      $("loginStatus").textContent = "";
+      // 登录后自动加载一次
+      refreshLatest();
+    } else {
+      $("loginStatus").textContent = "密码错误。";
+    }
+  });
+
+  // 回车登录
+  $("loginPassword").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") $("loginBtn").click();
+  });
+
+  async function refreshLatest() {
+    const status = $("status");
+    status.textContent = "正在读取最新金价...";
+    status.className = "status";
+
+    try {
+      const res = await fetch(API_BASE + "/api/gold-prices/latest");
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+
+      renderLatestTable(data);
+      fillFormFromLatest(data);
+
+      status.textContent = "已读取最新金价。";
+      status.className = "status status-success";
+    } catch (err) {
+      console.error(err);
+      status.textContent = "读取失败，请稍后再试。";
+      status.className = "status status-error";
+    }
+  }
+
+  function renderLatestTable(rows) {
+    const tbody = $("latestTableBody");
+    tbody.innerHTML = "";
+
+    if (!rows || !rows.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6b7280;">尚无资料</td></tr>';
+      return;
+    }
+
+    for (const row of rows) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.karat}</td>
+        <td>RM ${Number(row.sell_price).toFixed(2)}</td>
+        <td>RM ${Number(row.buy_price).toFixed(2)}</td>
+        <td>${row.source || "-"}</td>
+        <td>${row.created_at ? new Date(row.created_at).toLocaleString() : "-"}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function fillFormFromLatest(rows) {
+    const map = {};
+    for (const row of rows) {
+      map[row.karat] = row;
+    }
+    if (map["999"]) {
+      $("sell_999").value = map["999"].sell_price;
+      $("buy_999").value = map["999"].buy_price;
+    }
+    if (map["916"]) {
+      $("sell_916").value = map["916"].sell_price;
+      $("buy_916").value = map["916"].buy_price;
+    }
+    if (map["750"]) {
+      $("sell_750").value = map["750"].sell_price;
+      $("buy_750").value = map["750"].buy_price;
+    }
+  }
+
+  async function savePrices() {
+    const status = $("status");
+    status.textContent = "";
+    status.className = "status";
+
+    const entries = [
+      { karat: "999", buy: $("buy_999").value, sell: $("sell_999").value },
+      { karat: "916", buy: $("buy_916").value, sell: $("sell_916").value },
+      { karat: "750", buy: $("buy_750").value, sell: $("sell_750").value },
+    ];
+
+    const toSave = entries.filter(e => e.buy || e.sell);
+
+    if (!toSave.length) {
+      status.textContent = "请至少填写一组金价再保存。";
+      status.className = "status status-error";
+      return;
+    }
+
+    $("saveBtn").disabled = true;
+    $("saveBtn").textContent = "保存中...";
+
+    try {
+      for (const item of toSave) {
+        if (!item.buy || !item.sell) continue;
+        const body = {
+          karat: item.karat,
+          buy_price: Number(item.buy),
+          sell_price: Number(item.sell),
+          source: "manual"
+        };
+        const res = await fetch(API_BASE + "/api/gold-prices", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) {
+          const txt = await res.text();
+          console.error("Failed for", item.karat, txt);
+          throw new Error("保存 " + item.karat + " 失败: " + res.status);
+        }
+      }
+
+      status.textContent = "保存成功！已写入线上系统。";
+      status.className = "status status-success";
+      await refreshLatest();
+    } catch (err) {
+      console.error(err);
+      status.textContent = "保存失败，请稍后再试或检查网络／API。";
+      status.className = "status status-error";
+    } finally {
+      $("saveBtn").disabled = false;
+      $("saveBtn").textContent = "💾 保存今日金价";
+    }
+  }
+
+  $("loadBtn").addEventListener("click", refreshLatest);
+  $("saveBtn").addEventListener("click", savePrices);
+
+  // 提示：Render 免费实例第一次请求会比较慢
+  console.log("Admin gold price panel loaded. API:", API_BASE);
+</script>
+</body>
+</html>
